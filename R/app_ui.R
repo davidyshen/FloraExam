@@ -17,8 +17,10 @@ app_ui <- function(request) {
         "Select a major habitat",
         selected = "Skov",
         choices = c("Kær/Mose/Eng", "Klit/Strand", "Græsland/Overdrev",
-                   "Strandeng", "Hede", "Klipper", "Sø", "Vandareal", "Skov", "Vandløb"),
+                   "Strandeng", "Hede", "Klipper", "Sø", "Vandareal", "Skov", "Vandløb")
       ),
+      actionButton("update", "Pick random plot",
+                   class = "btn-primary",style='padding:4px; font-size:120%'),
       plotly::plotlyOutput("plot_myhab"),
       shiny::tableOutput("tbl_myhab")
     )
