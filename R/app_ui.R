@@ -4,6 +4,7 @@
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @importFrom plotly plotlyOutput
+#' @importFrom stats na.omit na.omit
 #' @noRd
 app_ui <- function(request) {
   tagList(
@@ -11,18 +12,21 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Your application UI logic
     fluidPage(
-      h1("TestExamapp"),
-      shiny::selectInput(
-        "filter_majhab",
-        "Select a major habitat",
-        selected = "Skov",
-        choices = c("Kær/Mose/Eng", "Klit/Strand", "Græsland/Overdrev",
-                   "Strandeng", "Hede", "Klipper", "Sø", "Vandareal", "Skov", "Vandløb")
-      ),
-      actionButton("update", "Pick random plot",
-                   class = "btn-primary",style='padding:4px; font-size:120%'),
-      plotly::plotlyOutput("plot_myhab"),
-      shiny::tableOutput("tbl_myhab")
+      titlePanel("TestExamapp"),
+      sidebarLayout(
+        shiny::sidebarPanel(
+          actionButton("update", "Pick random plot",
+                       class = "btn-primary",style='padding:4px; font-size:120%'),
+          shiny::radioButtons(inputId = "Answer",
+                              label = "Choose the possible habitat",
+                              choices = sort(as.character(stats::na.omit(unique(FloraExam::SpatialData$MajorHabName)))))
+        ),
+        shiny::mainPanel(
+          plotly::plotlyOutput("plot_ellenberg"),
+          shiny::dataTableOutput("tbl_myhab")
+        )
+
+      )
     )
   )
 }

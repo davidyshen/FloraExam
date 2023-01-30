@@ -5,7 +5,8 @@ library(dplyr)
 SpatialData <- terra::vect("data-raw/Spatial.shp") |>
   as.data.frame() |>
   dplyr::rename(habitat_name  = habitat_na,
-                MajorHabName = MajorHabNa)
+                MajorHabName = MajorHabNa) |>
+  dplyr::mutate(plot = as.character(plot))
 
 
 
