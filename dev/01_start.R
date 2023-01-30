@@ -25,7 +25,7 @@ golem::fill_desc(
   author_first_name = "Derek", # Your First Name
   author_last_name = "Corcoran", # Your Last Name
   author_email = "derek.corcoran.barrios@gmail.com", # Your Email
-  repo_url = NULL # The URL of the GitHub Repo (optional)
+  repo_url = "https://github.com/Sustainscapes/FloraExam" # The URL of the GitHub Repo (optional)
 )
 
 ## Set {golem} options ----
@@ -33,13 +33,13 @@ golem::set_golem_options()
 
 ## Create Common Files ----
 ## See ?usethis for more information
-usethis::use_mit_license("Golem User") # You can set another license here
+usethis::use_agpl3_license()
 usethis::use_readme_rmd(open = FALSE)
 # Note that `contact` is required since usethis version 2.1.5
 # If your {usethis} version is older, you can remove that param
-usethis::use_code_of_conduct(contact = "Golem User")
-usethis::use_lifecycle_badge("Experimental")
-usethis::use_news_md(open = FALSE)
+#usethis::use_code_of_conduct(contact = "Golem User")
+#usethis::use_lifecycle_badge("Experimental")
+#usethis::use_news_md(open = FALSE)
 
 ## Use git ----
 usethis::use_git()
@@ -57,6 +57,8 @@ golem::use_favicon() # path = "path/to/ico". Can be an online file.
 golem::use_utils_ui(with_test = TRUE)
 golem::use_utils_server(with_test = TRUE)
 
+usethis::use_package("dplyr")
+usethis::use_package("rlang")
 # You're now set! ----
 
 # go to dev/02_dev.R

@@ -6,10 +6,14 @@ Authors@R:
 Description: Generates a basic shiny app as an example of the test you
     would in the Danish Flora course.
 License: AGPL (>= 3)
+URL: https://github.com/Sustainscapes/FloraExam
+BugReports: https://github.com/Sustainscapes/FloraExam/issues
 Imports: 
     config (>= 0.3.1),
     dplyr,
+    ggplot2,
     golem (>= 0.3.5),
+    plotly,
     rlang,
     shiny (>= 1.7.4)
 Suggests: 
@@ -20,5 +24,5 @@ Encoding: UTF-8
 Language: en-US
 LazyData: true
 RoxygenNote: 7.2.2
-URL: https://github.com/Sustainscapes/FloraExam
-BugReports: https://github.com/Sustainscapes/FloraExam/issues
+Depends: 
+    R (>= 2.10)

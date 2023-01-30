@@ -3,6 +3,7 @@
 #' @param request Internal parameter for `{shiny}`.
 #'     DO NOT REMOVE.
 #' @import shiny
+#' @importFrom plotly plotlyOutput
 #' @noRd
 app_ui <- function(request) {
   tagList(
@@ -10,7 +11,16 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Your application UI logic
     fluidPage(
-      h1("TestExamapp")
+      h1("TestExamapp"),
+      shiny::selectInput(
+        "filter_majhab",
+        "Select a major habitat",
+        selected = "Skov",
+        choices = c("Kær/Mose/Eng", "Klit/Strand", "Græsland/Overdrev",
+                   "Strandeng", "Hede", "Klipper", "Sø", "Vandareal", "Skov", "Vandløb"),
+      ),
+      plotly::plotlyOutput("plot_myhab"),
+      shiny::tableOutput("tbl_myhab")
     )
   )
 }
