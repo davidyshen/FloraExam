@@ -18,6 +18,7 @@ Imports:
     plotly,
     rlang,
     shiny (>= 1.7.4),
+    shinyWidgets,
     stats,
     stringr,
     tidyr
