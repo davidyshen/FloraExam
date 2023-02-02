@@ -39,7 +39,8 @@ Plots <- FloraExam::SpatialData |>
   unique()
 
 SpatialData <- SpatialData |>
-  dplyr::filter(plot %in% Plots)
+  dplyr::filter(plot %in% Plots) |>
+  dplyr::mutate(habitat_name = paste0(habitat_name, " (", habtype, ")"))
 
 Final_Frequency <- Final_Frequency |>
   dplyr::filter(plot %in% Plots)
