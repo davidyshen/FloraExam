@@ -6,7 +6,8 @@ SpatialData <- terra::vect("data-raw/Spatial.shp") |>
   as.data.frame() |>
   dplyr::rename(habitat_name  = habitat_na,
                 MajorHabName = MajorHabNa) |>
-  dplyr::mutate(plot = as.character(plot))
+  dplyr::mutate(plot = as.character(plot)) |>
+  dplyr::filter(habitat_name != "Enekrat")
 
 
 Ellenberg_CSR <- readRDS("data-raw/CRS_Ellenberg_Dataset.rds")

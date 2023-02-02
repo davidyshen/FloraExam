@@ -46,6 +46,7 @@ app_ui <- function(request) {
         ),
         shiny::mainPanel(
           shiny::textOutput("Test"),
+          shiny::textOutput("Artscore"),
           plotly::plotlyOutput("plot_ellenberg"),
           plotly::plotlyOutput("plot_csr"),
           shiny::dataTableOutput("tbl_myhab")

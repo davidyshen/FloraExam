@@ -3,6 +3,7 @@
 #' @param input,output,session Internal parameters for {shiny}.
 #'     DO NOT REMOVE.
 #' @import shiny
+#' @importFrom Artscore Artscore
 #' @importFrom dplyr filter slice_sample left_join select mutate starts_with
 #' @importFrom stringr str_remove_all str_to_sentence str_replace_all
 #' @importFrom tidyr pivot_longer everything
@@ -27,6 +28,11 @@ app_server <- function(input, output, session) {
         dplyr::left_join(FloraExam::Ellenberg_CSR)
     }
     })
+
+  output$Artscore <- renderText({
+    Index <- Artscore::Artscore(ScientificName = my_habitatdata()$species, Habitat_code = unique(my_habitatdata()$habtype))$Artsindex
+    paste("The artscore for this site is", round(Index, 3))
+  })
 
   output$Test <- shiny::renderText({
     my_habitatdata()$habitat_name[1]

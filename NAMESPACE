@@ -2,6 +2,7 @@
 
 export(run_app)
 import(shiny)
+importFrom(Artscore,Artscore)
 importFrom(dplyr,filter)
 importFrom(dplyr,left_join)
 importFrom(dplyr,mutate)
