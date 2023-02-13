@@ -6,13 +6,15 @@
 \title{A subset of data from a sampled dataset with habitat types and plot code
 of sampling.}
 \format{
-## A data frame with 46,536 rows and 5 columns:
+## A data frame with 647 rows and 7 columns:
 \describe{
   \item{plot}{Code for the plot}
   \item{habtype}{Code for habitat type}
   \item{MajorHab}{Code for the major habitat type}
   \item{habitat_name}{Name for the habitat type}
   \item{MajorHabName}{Name for the major habitat type}
+  \item{Long}{Plot longitude}
+  \item{Long}{Plot latitude}
 }
 }
 \usage{

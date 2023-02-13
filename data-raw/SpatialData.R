@@ -2,10 +2,18 @@
 library(terra)
 library(tidyverse)
 
+Coords <- terra::vect("data-raw/Spatial.shp") |>
+  terra::geom() |>
+  as.data.frame() |>
+  dplyr::select(x, y)
+
 SpatialData <- terra::vect("data-raw/Spatial.shp") |>
   as.data.frame() |>
+  dplyr::bind_cols(Coords) |>
   dplyr::rename(habitat_name  = habitat_na,
-                MajorHabName = MajorHabNa) |>
+                MajorHabName = MajorHabNa,
+                Lat = y,
+                Long = x) |>
   dplyr::mutate(plot = as.character(plot)) |>
   dplyr::filter(habitat_name != "Enekrat")
 
@@ -17,7 +25,7 @@ Final_Frequency <- read_csv("data-raw/Final_Frequency.csv") |>
   dplyr::filter(!is.na(species)) |>
   dplyr::mutate(plot = as.character(plot))
 
-Plots <- FloraExam::SpatialData |>
+Plots <- SpatialData |>
   dplyr::full_join(FloraExam::Final_Frequency) |>
   dplyr::full_join(FloraExam::Ellenberg_CSR) |>
   dplyr::filter(!is.na(habitat_name)) |>

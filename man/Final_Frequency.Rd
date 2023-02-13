@@ -5,7 +5,7 @@
 \alias{Final_Frequency}
 \title{A subset of data from from a sampled dataset with the sampled species}
 \format{
-A data frame with 723,101 rows and 5 columns:
+A data frame with 8,436 rows and 5 columns:
 \describe{
   \item{plot}{Code for the plot}
   \item{year}{The sampled year}

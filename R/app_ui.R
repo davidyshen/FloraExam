@@ -29,27 +29,31 @@ app_ui <- function(request) {
                        class = "btn-primary",style='padding:4px; font-size:120%'),
           shiny::conditionalPanel(
             condition = "input.update != 0",
+            shiny::h5("Do you need a hint?")),
+          shiny::conditionalPanel(
+            condition = "input.update != 0",
+            shinyWidgets::switchInput("Hint", "Hint")),
+          shiny::textOutput("major_hint"),
+          shiny::conditionalPanel(
+            condition = "input.update != 0",
           shiny::selectizeInput(inputId = "Answer",
-                              label = "What is this habitat type? choose it in the list",
+                              label = shiny::h3("What is this habitat type? choose it in the list"),
                               choices = sort(as.character(stats::na.omit(unique(FloraExam::SpatialData$habitat_name)))),
                               multiple = TRUE,
-                              options = list(maxItems = 1))
+                              options = list(maxItems = 1)),
+          shiny::htmlOutput("Rightwrong")
           ),
           shiny::conditionalPanel(
             condition = "input.update != 0",
-          shiny::h5("Do you need a hint?")),
-          shiny::conditionalPanel(
-            condition = "input.update != 0",
-          shinyWidgets::switchInput("Hint", "Hint")),
-          shiny::textOutput("major_hint"),
-          shiny::textOutput("Rightwrong")
+            shiny::uiOutput("Map")
+          )
         ),
         shiny::mainPanel(
           shiny::textOutput("Test"),
           shiny::textOutput("Artscore"),
+          shiny::dataTableOutput("tbl_myhab"),
           plotly::plotlyOutput("plot_ellenberg"),
           plotly::plotlyOutput("plot_csr"),
-          shiny::dataTableOutput("tbl_myhab")
         )
 
       )
