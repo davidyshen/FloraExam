@@ -52,11 +52,10 @@ app_ui <- function(request) {
           shiny::conditionalPanel(
             condition = "input.update != 0",
             shiny::downloadButton("report", "Generate pdf")),
-          shiny::textOutput("Test"),
           shiny::textOutput("Artscore"),
           shiny::dataTableOutput("tbl_myhab"),
           plotly::plotlyOutput("plot_ellenberg"),
-          plotly::plotlyOutput("plot_csr"),
+          plotly::plotlyOutput("plot_csr", width = "90%", height = "90%"),
         )
 
       )

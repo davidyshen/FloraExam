@@ -100,37 +100,13 @@ app_server <- function(input, output, session) {
           ternary = list(
             sum = 100,
             aaxis = list(
-              title = "Competitor",
-              titlefont = list(
-                size = 20
-              ),
-              tickfont = list(
-                size = 15
-              ),
-              tickcolor = 'rgba(0,0,0,0)',
-              ticklen = 5
+              title = "Competitor"
             ),
             baxis = list(
-              title = "Ruderal",
-              titlefont = list(
-                size = 20
-              ),
-              tickfont = list(
-                size = 15
-              ),
-              tickcolor = 'rgba(0,0,0,0)',
-              ticklen = 5
+              title = "Ruderal"
             ),
             caxis = list(
-              title = "Stress tolerator",
-              titlefont = list(
-                size = 20
-              ),
-              tickfont = list(
-                size = 15
-              ),
-              tickcolor = 'rgba(0,0,0,0)',
-              ticklen = 5
+              title = "Stress tolerator"
             )
           ))
 
