@@ -1,0 +1,44 @@
+---
+title: "Mock Exam"
+date: "`r format(Sys.time(), '%d/%m, %Y')`"
+output:
+  bookdown::pdf_document2:
+    fig_caption: true
+    toc: false
+params:
+  Artscore: NA
+  SpeciesList: NA
+  Histogram: NA
+  Ternary: NA
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, error = FALSE)
+library(ggplot2)
+```
+
+`r params$Artscore`
+
+The species list and their parameters are shown in table \@ref(tab:Species)
+
+```{r Species, echo = F}
+Table <- params$SpeciesList
+
+kableExtra::kbl(Table, booktabs = T, caption = "Species list with their parameters, including ellenberg values and CSR values") |> 
+kableExtra::kable_styling(latex_options = c("scale_down", "hold_position"), position = "center")
+```
+
+The histogram of the ecological indicator values can be seen in figure \@ref(fig:Ellenberg)
+
+```{r Ellenberg, fig.cap= "Ecological indicator values for the species in the plot"}
+print(params$Histogram)
+```
+
+Finally the ternary plot for the CSR values can be seen in figure \@ref(fig:CSR)
+
+```{r CSR, fig.cap= "CSR values for the species in the plot"}
+CSRPlot <- params$Ternary
+
+htmlwidgets::saveWidget(widget = CSRPlot, file = "csr.html")
+webshot2::webshot(url = "csr.html", file = "csr.png", delay = 1, zoom = 4, vheight = 500)
+```

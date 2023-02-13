@@ -49,6 +49,9 @@ app_ui <- function(request) {
           )
         ),
         shiny::mainPanel(
+          shiny::conditionalPanel(
+            condition = "input.update != 0",
+            shiny::downloadButton("report", "Generate pdf")),
           shiny::textOutput("Test"),
           shiny::textOutput("Artscore"),
           shiny::dataTableOutput("tbl_myhab"),
