@@ -49,6 +49,7 @@ app_ui <- function(request) {
           )
         ),
         shiny::mainPanel(
+          shiny::textOutput("path"),
           shiny::conditionalPanel(
             condition = "input.update != 0",
             shiny::downloadButton("report", "Generate pdf")),

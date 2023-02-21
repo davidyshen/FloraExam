@@ -17,6 +17,10 @@ app_server <- function(input, output, session) {
   habitat_name <- NavnDansk <- value <- Ellenberg <- canonicalName <- species <- rank <- C <- R <- S <- NULL
 
   # Initialize object to store reactive values
+  output$path <- renderText({
+    system.file("rmarkdown/templates/mock_exam/skeleton/skeleton.Rmd", package="FloraExam")
+  })
+
   rvs <- reactiveValues(Artscore = NULL,
                         SpeciesList = NULL,
                         Histogram = NULL,
