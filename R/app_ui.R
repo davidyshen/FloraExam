@@ -13,7 +13,7 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Your application UI logic
     fluidPage(
-      titlePanel("Danish Flora Test Exam"),
+      titlePanel("Danish Vegetation Types"),
       sidebarLayout(
         shiny::sidebarPanel(
           shiny::h5("Would you like to practice only some habitats? Turn on the filter"),
@@ -49,7 +49,6 @@ app_ui <- function(request) {
           )
         ),
         shiny::mainPanel(
-          shiny::textOutput("path"),
           shiny::conditionalPanel(
             condition = "input.update != 0",
             shiny::downloadButton("report", "Generate pdf")),
