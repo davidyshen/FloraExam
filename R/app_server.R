@@ -52,7 +52,7 @@ app_server <- function(input, output, session) {
   # })
   output$Rightwrong <- shiny::renderUI({
     if (req(input$Answer) == my_habitatdata()$MajorHabName[1]) {
-      shiny::HTML("<h2>You are correct! try another plot by clicking on the <em>Pick random plot</em> button<h2>")
+      shiny::HTML(paste("<h2>You are correct! the precise habitat type was", my_habitatdata()$habitat_name[1], ". Try another plot by clicking on the <em>Pick random plot</em> button<h2>"))
     } else if (req(input$Answer) != my_habitatdata()$MajorHabName[1]) {
       shiny::HTML("<h2>Try again!<h2>")
     }
@@ -82,7 +82,7 @@ app_server <- function(input, output, session) {
   output$plot_ellenberg <- plotly::renderPlotly({
     Medians <- my_habitatdata() |> dplyr::select(dplyr::starts_with("eiv_eres")) |> tidyr::pivot_longer(tidyr::everything(), names_to = "Ellenberg") |> dplyr::group_by(Ellenberg) |> dplyr::summarise(Median = median(value)) |> dplyr::mutate(Ellenberg = stringr::str_to_sentence(stringr::str_remove_all(Ellenberg, "eiv_eres_")))
 
-    G <- my_habitatdata() |> dplyr::select(dplyr::starts_with("eiv_eres")) |> tidyr::pivot_longer(tidyr::everything(), names_to = "Ellenberg") |> dplyr::mutate(Ellenberg = stringr::str_to_sentence(stringr::str_remove_all(Ellenberg, "eiv_eres_"))) |> ggplot2::ggplot(ggplot2::aes(x = Ellenberg, y = value)) + ggplot2::geom_boxplot() + ggplot2::coord_flip() + ggplot2::theme_bw() + ylim(c(0,10)) + ggplot2::xlab("Ecological indicator value") + ggplot2::xlab("Ecological indicator value") + ggrepel::geom_text_repel(data = Medians, aes(x = Ellenberg, y = Median, label = round(Median)))
+    G <- my_habitatdata() |> dplyr::select(dplyr::starts_with("eiv_eres")) |> tidyr::pivot_longer(tidyr::everything(), names_to = "Ellenberg") |> dplyr::mutate(Ellenberg = stringr::str_to_sentence(stringr::str_remove_all(Ellenberg, "eiv_eres_"))) |> ggplot2::ggplot(ggplot2::aes(x = Ellenberg, y = value)) + ggplot2::geom_boxplot() + ggplot2::coord_flip() + ggplot2::theme_bw() + ylim(c(0,10)) + ggplot2::xlab("Ecological indicator value") + ggplot2::xlab("Ecological indicator value") + ggrepel::geom_text_repel(data = Medians, aes(x = Ellenberg, y = Median, label = round(Median, 2)))
     rvs$Histogram <- G
     plotly::ggplotly(G)
   })
