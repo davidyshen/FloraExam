@@ -22,23 +22,23 @@ app_ui <- function(request) {
             condition = "input.HabFilter",
             shiny::selectizeInput(inputId = "HabChoice",
                                   label = "Which habitats would you like to practice with",
-                                  choices = sort(as.character(stats::na.omit(unique(FloraExam::SpatialData$habitat_name)))),
+                                  choices = sort(as.character(stats::na.omit(unique(FloraExam::SpatialData$MajorHabName)))),
                                   multiple = TRUE)
           ),
           actionButton("update", "Pick random plot",
                        class = "btn-primary",style='padding:4px; font-size:120%'),
-          shiny::conditionalPanel(
-            condition = "input.update != 0",
-            shiny::h5("Do you need a hint?")),
-          shiny::conditionalPanel(
-            condition = "input.update != 0",
-            shinyWidgets::switchInput("Hint", "Hint")),
-          shiny::textOutput("major_hint"),
+          # shiny::conditionalPanel(
+          #   condition = "input.update != 0",
+          #   shiny::h5("Do you need a hint?")),
+          # shiny::conditionalPanel(
+          #   condition = "input.update != 0",
+          #   shinyWidgets::switchInput("Hint", "Hint")),
+          # shiny::textOutput("major_hint"),
           shiny::conditionalPanel(
             condition = "input.update != 0",
           shiny::selectizeInput(inputId = "Answer",
                               label = shiny::h3("What is this habitat type? choose it in the list"),
-                              choices = sort(as.character(stats::na.omit(unique(FloraExam::SpatialData$habitat_name)))),
+                              choices = sort(as.character(stats::na.omit(unique(FloraExam::SpatialData$MajorHabName)))),
                               multiple = TRUE,
                               options = list(maxItems = 1)),
           shiny::htmlOutput("Rightwrong")

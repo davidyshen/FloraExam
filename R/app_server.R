@@ -4,17 +4,19 @@
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @importFrom Artscore Artscore
-#' @importFrom dplyr filter slice_sample left_join select mutate starts_with mutate_if
+#' @importFrom dplyr filter slice_sample left_join select mutate starts_with mutate_if group_by summarise
 #' @importFrom stringr str_remove_all str_to_sentence str_replace_all
 #' @importFrom tidyr pivot_longer everything
 #' @importFrom rlang sym
+#' @importFrom stats median
 #' @importFrom plotly renderPlotly ggplotly plot_ly add_trace layout
-#' @importFrom ggplot2 ggplot theme_bw geom_boxplot coord_flip ylim xlab
+#' @importFrom ggplot2 ggplot theme_bw geom_boxplot coord_flip ylim xlab aes
+#' @importFrom ggrepel geom_text_repel
 #' @importFrom leaflet renderLeaflet leaflet addCircles addProviderTiles leafletOutput
 #' @importFrom rmarkdown render
 #' @noRd
 app_server <- function(input, output, session) {
-  habitat_name <- NavnDansk <- value <- Ellenberg <- canonicalName <- species <- rank <- C <- R <- S <- NULL
+  Median <- MajorHabName <- habitat_name <- NavnDansk <- value <- Ellenberg <- canonicalName <- species <- rank <- C <- R <- S <- NULL
 
   # Initialize object to store reactive values
 
@@ -27,7 +29,7 @@ app_server <- function(input, output, session) {
   my_habitatdata <- eventReactive(input$update, {
     if(input$HabFilter){
       FloraExam::SpatialData |>
-        dplyr::filter(habitat_name %in% input$HabChoice) |>
+        dplyr::filter(MajorHabName %in% input$HabChoice) |>
         dplyr::slice_sample(n = 1) |>
         dplyr::left_join(FloraExam::Final_Frequency) |>
         dplyr::left_join(FloraExam::Ellenberg_CSR)
@@ -45,19 +47,19 @@ app_server <- function(input, output, session) {
     rvs$Artscore
   })
 
-  output$Test <- shiny::renderText({
-    my_habitatdata()$habitat_name[1]
-  })
+  # output$Test <- shiny::renderText({
+  #   my_habitatdata()$MajorHabName[1]
+  # })
   output$Rightwrong <- shiny::renderUI({
-    if (req(input$Answer) == my_habitatdata()$habitat_name[1]) {
+    if (req(input$Answer) == my_habitatdata()$MajorHabName[1]) {
       shiny::HTML("<h2>You are correct! try another plot by clicking on the <em>Pick random plot</em> button<h2>")
-    } else if (req(input$Answer) != my_habitatdata()$habitat_name[1]) {
+    } else if (req(input$Answer) != my_habitatdata()$MajorHabName[1]) {
       shiny::HTML("<h2>Try again!<h2>")
     }
   })
 
   output$Leaflet <- leaflet::renderLeaflet({
-    if (req(input$Answer) == my_habitatdata()$habitat_name[1]) {
+    if (req(input$Answer) == my_habitatdata()$MajorHabName[1]) {
       leaflet::leaflet(data = my_habitatdata()) |>
         leaflet::addProviderTiles("Esri.WorldImagery") |>
         leaflet::addCircles(lng = ~Long, lat = ~Lat)
@@ -66,19 +68,21 @@ app_server <- function(input, output, session) {
 
 
   output$Map <- renderUI({
-    if (req(input$Answer) == my_habitatdata()$habitat_name[1]) {
+    if (req(input$Answer) == my_habitatdata()$MajorHabName[1]) {
       leaflet::leafletOutput("Leaflet")
     }
   })
 
-  output$major_hint <- shiny::renderText({
-    if(req(input$Hint)){
-      paste("The habitat type is within the", my_habitatdata()$MajorHabName[1],"major habitat")
-    }
-  })
+  # output$major_hint <- shiny::renderText({
+  #   if(req(input$Hint)){
+  #     paste("The habitat type is within the", my_habitatdata()$MajorHabName[1],"major habitat")
+  #   }
+  # })
 
   output$plot_ellenberg <- plotly::renderPlotly({
-    G <- my_habitatdata() |> dplyr::select(dplyr::starts_with("eiv_eres")) |> tidyr::pivot_longer(tidyr::everything(), names_to = "Ellenberg") |> dplyr::mutate(Ellenberg = stringr::str_to_sentence(stringr::str_remove_all(Ellenberg, "eiv_eres_"))) |> ggplot2::ggplot(ggplot2::aes(x = Ellenberg, y = value)) + ggplot2::geom_boxplot() + ggplot2::coord_flip() + ggplot2::theme_bw() + ylim(c(0,10)) + ggplot2::xlab("Ecological indicator value")
+    Medians <- my_habitatdata() |> dplyr::select(dplyr::starts_with("eiv_eres")) |> tidyr::pivot_longer(tidyr::everything(), names_to = "Ellenberg") |> dplyr::group_by(Ellenberg) |> dplyr::summarise(Median = median(value)) |> dplyr::mutate(Ellenberg = stringr::str_to_sentence(stringr::str_remove_all(Ellenberg, "eiv_eres_")))
+
+    G <- my_habitatdata() |> dplyr::select(dplyr::starts_with("eiv_eres")) |> tidyr::pivot_longer(tidyr::everything(), names_to = "Ellenberg") |> dplyr::mutate(Ellenberg = stringr::str_to_sentence(stringr::str_remove_all(Ellenberg, "eiv_eres_"))) |> ggplot2::ggplot(ggplot2::aes(x = Ellenberg, y = value)) + ggplot2::geom_boxplot() + ggplot2::coord_flip() + ggplot2::theme_bw() + ylim(c(0,10)) + ggplot2::xlab("Ecological indicator value") + ggplot2::xlab("Ecological indicator value") + ggrepel::geom_text_repel(data = Medians, aes(x = Ellenberg, y = Median, label = round(Median)))
     rvs$Histogram <- G
     plotly::ggplotly(G)
   })
