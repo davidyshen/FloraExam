@@ -10,7 +10,7 @@
 #' @importFrom rlang sym
 #' @importFrom plotly renderPlotly ggplotly plot_ly add_trace layout
 #' @importFrom ggplot2 ggplot theme_bw geom_boxplot coord_flip ylim xlab
-#' @importFrom leaflet renderLeaflet leaflet addCircles addTiles leafletOutput
+#' @importFrom leaflet renderLeaflet leaflet addCircles addProviderTiles leafletOutput
 #' @importFrom rmarkdown render
 #' @noRd
 app_server <- function(input, output, session) {
@@ -59,7 +59,7 @@ app_server <- function(input, output, session) {
   output$Leaflet <- leaflet::renderLeaflet({
     if (req(input$Answer) == my_habitatdata()$habitat_name[1]) {
       leaflet::leaflet(data = my_habitatdata()) |>
-        leaflet::addTiles() |>
+        leaflet::addProviderTiles("Esri.WorldImagery") |>
         leaflet::addCircles(lng = ~Long, lat = ~Lat)
     }
   })

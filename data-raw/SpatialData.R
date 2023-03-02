@@ -7,6 +7,9 @@ Coords <- terra::vect("data-raw/Spatial.shp") |>
   as.data.frame() |>
   dplyr::select(x, y)
 
+NewHabs <- read_csv("data-raw/DFV_HabitatTypes_Novana_Pensum.csv") |>
+  dplyr::mutate(MajorHab = as.character(MajorHab))
+
 SpatialData <- terra::vect("data-raw/Spatial.shp") |>
   as.data.frame() |>
   dplyr::bind_cols(Coords) |>
@@ -15,7 +18,12 @@ SpatialData <- terra::vect("data-raw/Spatial.shp") |>
                 Lat = y,
                 Long = x) |>
   dplyr::mutate(plot = as.character(plot)) |>
-  dplyr::filter(habitat_name != "Enekrat")
+  dplyr::filter(habitat_name != "Enekrat") |>
+  left_join(NewHabs) |>
+  dplyr::filter(!is.na(PensumCategories)) |>
+  dplyr::select("plot", "habtype", "MajorHab", "habitat_name", "PensumCategories", "Long", "Lat") |>
+  rename(MajorHabName = PensumCategories)
+
 
 
 Ellenberg_CSR <- readRDS("data-raw/CRS_Ellenberg_Dataset.rds")
@@ -26,8 +34,8 @@ Final_Frequency <- read_csv("data-raw/Final_Frequency.csv") |>
   dplyr::mutate(plot = as.character(plot))
 
 Plots <- SpatialData |>
-  dplyr::full_join(FloraExam::Final_Frequency) |>
-  dplyr::full_join(FloraExam::Ellenberg_CSR) |>
+  dplyr::full_join(Final_Frequency, multiple = "all") |>
+  dplyr::full_join(Ellenberg_CSR, multiple = "all") |>
   dplyr::filter(!is.na(habitat_name)) |>
   group_by(plot, habitat_name) |>
   dplyr::summarize(non_na_eiv = sum(!is.na(eiv_eres_n)),
