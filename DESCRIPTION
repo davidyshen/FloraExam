@@ -29,11 +29,9 @@ Imports:
 Suggests: 
     bookdown,
     ggtern,
-    htmlwidgets,
     kableExtra,
     spelling,
-    testthat (>= 3.0.0),
-    webshot2
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US

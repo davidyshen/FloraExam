@@ -15,6 +15,12 @@
 #' @importFrom leaflet renderLeaflet leaflet addCircles addProviderTiles leafletOutput
 #' @importFrom rmarkdown render
 #' @noRd
+#'
+
+resetForm<-function(session){
+  updateSelectInput(session, "Answer",selected = "")
+}
+
 app_server <- function(input, output, session) {
   Median <- MajorHabName <- habitat_name <- NavnDansk <- value <- Ellenberg <- canonicalName <- species <- rank <- C <- R <- S <- NULL
 
@@ -28,6 +34,7 @@ app_server <- function(input, output, session) {
 
   # Your application server logic
   my_habitatdata <- eventReactive(input$update, {
+    resetForm(session)
     if(input$HabFilter){
       FloraExam::SpatialData |>
         dplyr::filter(MajorHabName %in% input$HabChoice) |>

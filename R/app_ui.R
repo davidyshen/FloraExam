@@ -38,7 +38,7 @@ app_ui <- function(request) {
             condition = "input.update != 0",
           shiny::selectizeInput(inputId = "Answer",
                               label = shiny::h3("What is this habitat type? choose it in the list"),
-                              choices = sort(as.character(stats::na.omit(unique(FloraExam::SpatialData$MajorHabName)))),
+                              choices = c(sort(as.character(stats::na.omit(unique(FloraExam::SpatialData$MajorHabName)))), ""),
                               multiple = TRUE,
                               options = list(maxItems = 1)),
           shiny::htmlOutput("Rightwrong")
