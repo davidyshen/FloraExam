@@ -28,6 +28,7 @@ Imports:
     tidyr
 Suggests: 
     bookdown,
+    ggtern,
     htmlwidgets,
     kableExtra,
     spelling,

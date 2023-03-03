@@ -23,7 +23,8 @@ app_server <- function(input, output, session) {
   rvs <- reactiveValues(Artscore = NULL,
                         SpeciesList = NULL,
                         Histogram = NULL,
-                        Ternary = NULL)
+                        Ternary = NULL,
+                        Dataset = NULL)
 
   # Your application server logic
   my_habitatdata <- eventReactive(input$update, {
@@ -87,6 +88,13 @@ app_server <- function(input, output, session) {
     plotly::ggplotly(G)
   })
   output$plot_csr <- plotly::renderPlotly({
+
+    rvs$Dataset <- my_habitatdata() |>
+      dplyr::select(C, R, S) |>
+      dplyr::filter(!is.na(C))
+
+    message(nrow(rvs$Dataset))
+
     Tern <- plotly::plot_ly(my_habitatdata()) |>
       plotly::add_trace(
         type = 'scatterternary',
@@ -147,7 +155,8 @@ app_server <- function(input, output, session) {
                        Artscore = rvs$Artscore,
                        SpeciesList = rvs$SpeciesList,
                        Histogram = rvs$Histogram,
-                       Ternary = rvs$Ternary
+                       Ternary = rvs$Ternary,
+                       Dataset = rvs$Dataset
                      )
 
                      shiny::incProgress(amount = 0.3, message = 'Printing the pdf')

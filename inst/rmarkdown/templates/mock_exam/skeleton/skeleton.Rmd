@@ -10,11 +10,13 @@ params:
   SpeciesList: NA
   Histogram: NA
   Ternary: NA
+  Dataset: NA
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, error = FALSE)
 library(ggplot2)
+library(ggtern)
 ```
 
 `r params$Artscore`
@@ -37,8 +39,7 @@ print(params$Histogram)
 Finally the ternary plot for the CSR values can be seen in figure \@ref(fig:CSR)
 
 ```{r CSR, fig.cap= "CSR values for the species in the plot"}
-CSRPlot <- params$Ternary
-
-htmlwidgets::saveWidget(widget = CSRPlot, file = "csr.html")
-webshot2::webshot(url = "csr.html", file = "csr.png", delay = 1, zoom = 4, vheight = 500)
+Dataset <- params$Dataset
+G <- ggtern::ggtern(data = Dataset, ggtern::aes(C, R, S)) + ggplot2::geom_point() + ggtern::theme_arrowlength()
+print(G)
 ```
