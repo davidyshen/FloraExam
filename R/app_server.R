@@ -40,12 +40,14 @@ app_server <- function(input, output, session) {
         dplyr::filter(MajorHabName %in% input$HabChoice) |>
         dplyr::slice_sample(n = 1) |>
         dplyr::left_join(FloraExam::Final_Frequency) |>
-        dplyr::left_join(FloraExam::Ellenberg_CSR)
+        dplyr::left_join(FloraExam::Ellenberg_CSR) |>
+        dplyr::left_join(FloraExam::Characteristic_Species)
     } else {
       FloraExam::SpatialData |>
         dplyr::slice_sample(n = 1) |>
         dplyr::left_join(FloraExam::Final_Frequency) |>
-        dplyr::left_join(FloraExam::Ellenberg_CSR)
+        dplyr::left_join(FloraExam::Ellenberg_CSR) |>
+        dplyr::left_join(FloraExam::Characteristic_Species)
     }
     })
 
@@ -139,7 +141,7 @@ app_server <- function(input, output, session) {
     Table <- my_habitatdata() |>
       dplyr::select(NavnDansk,
                     canonicalName,
-                    dplyr::starts_with("eiv"), C, S , R) |>
+                    dplyr::starts_with("eiv"), C, S , R, characteristic) |>
       dplyr::mutate_if(is.numeric, round)
 
     colnames(Table) <- stringr::str_replace_all(colnames(Table), "eiv_eres_", "Ellenberg_")

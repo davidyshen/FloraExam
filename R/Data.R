@@ -32,3 +32,12 @@
 #' @format A data frame with 2,827 rows and 36 columns:
 
 "Ellenberg_CSR"
+
+
+#' Characteristic species for different habitat types
+#'
+#' @format A data frame with 847 rows and 16 columns:
+
+"Characteristic_Species"
+
+
