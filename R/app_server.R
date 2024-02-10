@@ -14,6 +14,7 @@
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom leaflet renderLeaflet leaflet addCircles addProviderTiles leafletOutput
 #' @importFrom rmarkdown render
+#' @importFrom DT datatable formatStyle styleEqual renderDataTable
 #' @noRd
 #'
 
@@ -137,7 +138,7 @@ app_server <- function(input, output, session) {
 
   })
 
-  output$tbl_myhab <- shiny::renderDataTable({
+  output$tbl_myhab <- DT::renderDataTable({
     Table <- my_habitatdata() |>
       dplyr::select(NavnDansk,
                     canonicalName,
@@ -146,7 +147,13 @@ app_server <- function(input, output, session) {
 
     colnames(Table) <- stringr::str_replace_all(colnames(Table), "eiv_eres_", "Ellenberg_")
     rvs$SpeciesList <- Table
-    Table
+    Table  |>
+      DT::datatable() %>%
+      DT::formatStyle(
+       'characteristic',
+       target = 'row',
+        backgroundColor = DT::styleEqual(c(NA, "I", "C"), c('white', 'green', 'green'))
+      )
       })
   output$report <- downloadHandler(
     filename = paste0("Exam_Test", format(Sys.time(), "%Y-%m-%d"), ".pdf"),

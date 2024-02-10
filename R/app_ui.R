@@ -6,6 +6,7 @@
 #' @importFrom plotly plotlyOutput
 #' @importFrom stats na.omit na.omit
 #' @importFrom shinyWidgets switchInput
+#' @importFrom DT dataTableOutput
 #' @noRd
 app_ui <- function(request) {
   tagList(
@@ -53,7 +54,7 @@ app_ui <- function(request) {
             condition = "input.update != 0",
             shiny::downloadButton("report", "Generate pdf")),
           shiny::textOutput("Artscore"),
-          shiny::dataTableOutput("tbl_myhab"),
+          DT::dataTableOutput("tbl_myhab"),
           plotly::plotlyOutput("plot_ellenberg"),
           plotly::plotlyOutput("plot_csr", width = "90%", height = "90%"),
         )
