@@ -42,11 +42,8 @@ app_ui <- function(request) {
                               choices = c(sort(as.character(stats::na.omit(unique(FloraExam::SpatialData$MajorHabName)))), ""),
                               multiple = TRUE,
                               options = list(maxItems = 1)),
+          shiny::uiOutput("Question2"),
           shiny::htmlOutput("Rightwrong")
-          ),
-          shiny::conditionalPanel(
-            condition = "input.update != 0",
-            shiny::uiOutput("Question2")
           ),
           shiny::conditionalPanel(
             condition = "input.update != 0",

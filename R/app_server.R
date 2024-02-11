@@ -62,9 +62,9 @@ app_server <- function(input, output, session) {
   #   my_habitatdata()$MajorHabName[1]
   # })
   output$Rightwrong <- shiny::renderUI({
-    if (req(input$Answer) == my_habitatdata()$MajorHabName[1]) {
+    if (req(input$Answer2) == my_habitatdata()$habitat_name[1]) {
       shiny::HTML(paste("<h2>You are correct! the precise habitat type was", my_habitatdata()$habitat_name[1], ". Try another plot by clicking on the <em>Pick random plot</em> button<h2>"))
-    } else if (req(input$Answer) != my_habitatdata()$MajorHabName[1]) {
+    } else if (req(input$Answer2) != my_habitatdata()$habitat_name[1]) {
       shiny::HTML("<h2>Try again!<h2>")
     }
   })
@@ -72,14 +72,14 @@ app_server <- function(input, output, session) {
   output$Question2 <- renderUI({
     if (req(input$Answer) == my_habitatdata()$MajorHabName[1]) {
     shiny::selectizeInput(inputId = "Answer2",
-                          label = shiny::h3("What is this specific habitat type? choose it in the list"),
+                          label = shiny::h3("You are correct!!, What is the specific habitat type? choose it in the list"),
                           choices = c(sort((dplyr::filter(FloraExam::SpatialData, MajorHabName == my_habitatdata()$MajorHabName[1]))$habitat_name), ""),
                           multiple = TRUE,
                           options = list(maxItems = 1))
     }})
 
   output$Leaflet <- leaflet::renderLeaflet({
-    if (req(input$Answer) == my_habitatdata()$MajorHabName[1]) {
+    if (req(input$Answer2) == my_habitatdata()$habitat_name[1]) {
       leaflet::leaflet(data = my_habitatdata()) |>
         leaflet::addProviderTiles("Esri.WorldImagery") |>
         leaflet::addCircles(lng = ~Long, lat = ~Lat)
