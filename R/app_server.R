@@ -69,6 +69,15 @@ app_server <- function(input, output, session) {
     }
   })
 
+  output$Question2 <- renderUI({
+    if (req(input$Answer) == my_habitatdata()$MajorHabName[1]) {
+    shiny::selectizeInput(inputId = "Answer2",
+                          label = shiny::h3("What is this specific habitat type? choose it in the list"),
+                          choices = c(sort((dplyr::filter(FloraExam::SpatialData, MajorHabName == my_habitatdata()$MajorHabName[1]))$habitat_name), ""),
+                          multiple = TRUE,
+                          options = list(maxItems = 1))
+    }})
+
   output$Leaflet <- leaflet::renderLeaflet({
     if (req(input$Answer) == my_habitatdata()$MajorHabName[1]) {
       leaflet::leaflet(data = my_habitatdata()) |>

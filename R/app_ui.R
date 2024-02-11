@@ -38,11 +38,15 @@ app_ui <- function(request) {
           shiny::conditionalPanel(
             condition = "input.update != 0",
           shiny::selectizeInput(inputId = "Answer",
-                              label = shiny::h3("What is this habitat type? choose it in the list"),
+                              label = shiny::h3("What is this Major habitat type? choose it in the list"),
                               choices = c(sort(as.character(stats::na.omit(unique(FloraExam::SpatialData$MajorHabName)))), ""),
                               multiple = TRUE,
                               options = list(maxItems = 1)),
           shiny::htmlOutput("Rightwrong")
+          ),
+          shiny::conditionalPanel(
+            condition = "input.update != 0",
+            shiny::uiOutput("Question2")
           ),
           shiny::conditionalPanel(
             condition = "input.update != 0",
