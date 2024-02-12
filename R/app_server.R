@@ -14,7 +14,7 @@
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom leaflet renderLeaflet leaflet addCircles addProviderTiles leafletOutput
 #' @importFrom rmarkdown render
-#' @importFrom DT datatable formatStyle styleEqual renderDataTable
+#' @importFrom DT datatable formatStyle styleEqual renderDT
 #' @noRd
 #'
 
@@ -23,7 +23,7 @@ resetForm<-function(session){
 }
 
 app_server <- function(input, output, session) {
-  Median <- MajorHabName <- habitat_name <- NavnDansk <- value <- Ellenberg <- canonicalName <- species <- rank <- C <- R <- S <- NULL
+  Median <- MajorHabName <- habitat_name <- NavnDansk <- value <- Ellenberg <- canonicalName <- species <- rank <- C <- R <- S <- characteristic <- NULL
 
   # Initialize object to store reactive values
 
@@ -147,7 +147,7 @@ app_server <- function(input, output, session) {
 
   })
 
-  output$tbl_myhab <- DT::renderDataTable({
+  output$tbl_myhab <- DT::renderDT({
     Table <- my_habitatdata() |>
       dplyr::select(NavnDansk,
                     canonicalName,
@@ -161,7 +161,7 @@ app_server <- function(input, output, session) {
       DT::formatStyle(
        'characteristic',
        target = 'row',
-        backgroundColor = DT::styleEqual(c(NA, "I", "C"), c('white', 'green', 'green'))
+        backgroundColor = DT::styleEqual(c(NA, "I", "C"), c('white', '#a6d96a', '#fdae61'))
       )
       })
   output$report <- downloadHandler(

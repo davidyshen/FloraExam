@@ -19,6 +19,7 @@ Imports:
     ggrepel,
     golem (>= 0.3.5),
     leaflet,
+    magrittr,
     plotly,
     rlang,
     rmarkdown,
