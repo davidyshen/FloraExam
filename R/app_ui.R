@@ -6,6 +6,7 @@
 #' @importFrom plotly plotlyOutput
 #' @importFrom stats na.omit na.omit
 #' @importFrom shinyWidgets switchInput
+#' @importFrom DT DTOutput
 #' @noRd
 app_ui <- function(request) {
   tagList(
@@ -37,10 +38,11 @@ app_ui <- function(request) {
           shiny::conditionalPanel(
             condition = "input.update != 0",
           shiny::selectizeInput(inputId = "Answer",
-                              label = shiny::h3("What is this habitat type? choose it in the list"),
+                              label = shiny::h3("What is this Major habitat type? choose it in the list"),
                               choices = c(sort(as.character(stats::na.omit(unique(FloraExam::SpatialData$MajorHabName)))), ""),
                               multiple = TRUE,
                               options = list(maxItems = 1)),
+          shiny::uiOutput("Question2"),
           shiny::htmlOutput("Rightwrong")
           ),
           shiny::conditionalPanel(
@@ -53,7 +55,7 @@ app_ui <- function(request) {
             condition = "input.update != 0",
             shiny::downloadButton("report", "Generate pdf")),
           shiny::textOutput("Artscore"),
-          shiny::dataTableOutput("tbl_myhab"),
+          DT::DTOutput("tbl_myhab"),
           plotly::plotlyOutput("plot_ellenberg"),
           plotly::plotlyOutput("plot_csr", width = "90%", height = "90%"),
         )

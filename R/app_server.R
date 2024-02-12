@@ -14,6 +14,7 @@
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom leaflet renderLeaflet leaflet addCircles addProviderTiles leafletOutput
 #' @importFrom rmarkdown render
+#' @importFrom DT datatable formatStyle styleEqual renderDT
 #' @noRd
 #'
 
@@ -22,7 +23,7 @@ resetForm<-function(session){
 }
 
 app_server <- function(input, output, session) {
-  Median <- MajorHabName <- habitat_name <- NavnDansk <- value <- Ellenberg <- canonicalName <- species <- rank <- C <- R <- S <- NULL
+  Median <- MajorHabName <- habitat_name <- NavnDansk <- value <- Ellenberg <- canonicalName <- species <- rank <- C <- R <- S <- characteristic <- NULL
 
   # Initialize object to store reactive values
 
@@ -40,12 +41,14 @@ app_server <- function(input, output, session) {
         dplyr::filter(MajorHabName %in% input$HabChoice) |>
         dplyr::slice_sample(n = 1) |>
         dplyr::left_join(FloraExam::Final_Frequency) |>
-        dplyr::left_join(FloraExam::Ellenberg_CSR)
+        dplyr::left_join(FloraExam::Ellenberg_CSR) |>
+        dplyr::left_join(FloraExam::Characteristic_Species)
     } else {
       FloraExam::SpatialData |>
         dplyr::slice_sample(n = 1) |>
         dplyr::left_join(FloraExam::Final_Frequency) |>
-        dplyr::left_join(FloraExam::Ellenberg_CSR)
+        dplyr::left_join(FloraExam::Ellenberg_CSR) |>
+        dplyr::left_join(FloraExam::Characteristic_Species)
     }
     })
 
@@ -59,15 +62,24 @@ app_server <- function(input, output, session) {
   #   my_habitatdata()$MajorHabName[1]
   # })
   output$Rightwrong <- shiny::renderUI({
-    if (req(input$Answer) == my_habitatdata()$MajorHabName[1]) {
+    if (req(input$Answer2) == my_habitatdata()$habitat_name[1]) {
       shiny::HTML(paste("<h2>You are correct! the precise habitat type was", my_habitatdata()$habitat_name[1], ". Try another plot by clicking on the <em>Pick random plot</em> button<h2>"))
-    } else if (req(input$Answer) != my_habitatdata()$MajorHabName[1]) {
+    } else if (req(input$Answer2) != my_habitatdata()$habitat_name[1]) {
       shiny::HTML("<h2>Try again!<h2>")
     }
   })
 
-  output$Leaflet <- leaflet::renderLeaflet({
+  output$Question2 <- renderUI({
     if (req(input$Answer) == my_habitatdata()$MajorHabName[1]) {
+    shiny::selectizeInput(inputId = "Answer2",
+                          label = shiny::h3("You are correct!!, What is the specific habitat type? choose it in the list"),
+                          choices = c(sort((dplyr::filter(FloraExam::SpatialData, MajorHabName == my_habitatdata()$MajorHabName[1]))$habitat_name), ""),
+                          multiple = TRUE,
+                          options = list(maxItems = 1))
+    }})
+
+  output$Leaflet <- leaflet::renderLeaflet({
+    if (req(input$Answer2) == my_habitatdata()$habitat_name[1]) {
       leaflet::leaflet(data = my_habitatdata()) |>
         leaflet::addProviderTiles("Esri.WorldImagery") |>
         leaflet::addCircles(lng = ~Long, lat = ~Lat)
@@ -135,16 +147,22 @@ app_server <- function(input, output, session) {
 
   })
 
-  output$tbl_myhab <- shiny::renderDataTable({
+  output$tbl_myhab <- DT::renderDT({
     Table <- my_habitatdata() |>
       dplyr::select(NavnDansk,
                     canonicalName,
-                    dplyr::starts_with("eiv"), C, S , R) |>
+                    dplyr::starts_with("eiv"), C, S , R, characteristic) |>
       dplyr::mutate_if(is.numeric, round)
 
     colnames(Table) <- stringr::str_replace_all(colnames(Table), "eiv_eres_", "Ellenberg_")
     rvs$SpeciesList <- Table
-    Table
+    Table  |>
+      DT::datatable() %>%
+      DT::formatStyle(
+       'characteristic',
+       target = 'row',
+        backgroundColor = DT::styleEqual(c(NA, "I", "C"), c('white', '#a6d96a', '#fdae61'))
+      )
       })
   output$report <- downloadHandler(
     filename = paste0("Exam_Test", format(Sys.time(), "%Y-%m-%d"), ".pdf"),
