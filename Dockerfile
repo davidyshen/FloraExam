@@ -8,7 +8,7 @@ RUN Rscript -e 'remotes::install_version("rlang",upgrade="never", version = "1.1
 RUN Rscript -e 'remotes::install_version("stringr",upgrade="never", version = "1.5.1")'
 RUN Rscript -e 'remotes::install_version("dplyr",upgrade="never", version = "1.1.4")'
 RUN Rscript -e 'remotes::install_version("rmarkdown",upgrade="never", version = "2.25")'
-RUN Rscript -e 'remotes::install_version("ggplot2",upgrade="never", version = "3.4.4")'
+RUN Rscript -e 'remotes::install_version("ggplot2",upgrade="never", version = "3.5.0")'
 RUN Rscript -e 'remotes::install_version("shiny",upgrade="never", version = "1.8.0")'
 RUN Rscript -e 'remotes::install_version("tidyr",upgrade="never", version = "1.3.1")'
 RUN Rscript -e 'remotes::install_version("config",upgrade="never", version = "0.3.2")'
@@ -23,12 +23,12 @@ RUN Rscript -e 'remotes::install_version("leaflet",upgrade="never", version = "2
 RUN Rscript -e 'remotes::install_version("golem",upgrade="never", version = "0.4.1")'
 RUN Rscript -e 'remotes::install_version("ggrepel",upgrade="never", version = "0.9.5")'
 RUN Rscript -e 'remotes::install_version("DT",upgrade="never", version = "0.29")'
-RUN Rscript -e 'remotes::install_github("rspatial/terra@876d6b4c162429814a503622efa01bb27e54d53c")'
+RUN Rscript -e 'remotes::install_github("rspatial/terra@1b7d4a0589d45234ef413ce06a01527aa9b0c2fd")'
 RUN Rscript -e 'remotes::install_github("Sustainscapes/Artscore@64eaf5a9d32ec62fff1cce1523ca0fa3e669416a")'
 RUN mkdir /build_zone
 ADD . /build_zone
 WORKDIR /build_zone
-RUN R -e 'remotes::install_github("Sustainscapes/FloraExam@b0fed5e673911cd0cbd587cccf68ca3b1a81e250")'
+RUN R -e 'remotes::install_local(upgrade="never")'
 RUN rm -rf /build_zone
 EXPOSE 80
 CMD R -e "options('shiny.port'=80,shiny.host='0.0.0.0');library(FloraExam);FloraExam::run_app()"
