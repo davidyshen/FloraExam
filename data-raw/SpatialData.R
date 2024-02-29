@@ -1,14 +1,18 @@
 ## code to prepare `SpatialData` dataset goes here
 library(terra)
 library(tidyverse)
+library(readxl)
 
 Coords <- terra::vect("data-raw/Spatial.shp") |>
   terra::geom() |>
   as.data.frame() |>
   dplyr::select(x, y)
 
-NewHabs <- read_csv("data-raw/DFV_HabitatTypes_Novana_Pensum.csv") |>
-  dplyr::mutate(MajorHab = as.character(MajorHab))
+NewHabs <- read_xlsx("data-raw/Habitat_types_DFV_v2.xlsx") |>
+  dplyr::mutate(MajorHab = as.character(MajorHab),
+                habtype = as.character(habtype)) |>
+  dplyr::rename(habitat_name = habtypeName) |>
+  dplyr::select("habtype", "habitat_name", "MajorHab", "MajorHabName")
 
 SpatialData <- terra::vect("data-raw/Spatial.shp") |>
   as.data.frame() |>
@@ -17,12 +21,11 @@ SpatialData <- terra::vect("data-raw/Spatial.shp") |>
                 MajorHabName = MajorHabNa,
                 Lat = y,
                 Long = x) |>
-  dplyr::mutate(plot = as.character(plot)) |>
-  dplyr::filter(habitat_name != "Enekrat") |>
+  dplyr::select(-habitat_name, -MajorHabName) |>
+  dplyr::mutate(plot = as.character(plot), habtype = as.character(habtype)) |>
   left_join(NewHabs) |>
-  dplyr::filter(!is.na(PensumCategories)) |>
-  dplyr::select("plot", "habtype", "MajorHab", "habitat_name", "PensumCategories", "Long", "Lat") |>
-  rename(MajorHabName = PensumCategories)
+  dplyr::filter_all(~!is.na(.x)) |>
+  dplyr::select("plot", "habtype", "MajorHab", "habitat_name", "MajorHabName", "Long", "Lat")
 
 
 
