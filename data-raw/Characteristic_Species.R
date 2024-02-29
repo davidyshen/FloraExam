@@ -7,8 +7,8 @@ Characteristic_Species <- readxl::read_xlsx("data-raw/habitat_characteristic_spe
   tidyr::pivot_longer("1210":"91E0", names_to = "habtype", values_to = "characteristic") |>
   dplyr::filter(!is.na(characteristic)) |>
   dplyr::select(gbifid, videnskabeligt_navn, accepteret_dansk_navn, taxonrang, habtype, characteristic) |>
-  dplyr::rename(Taxa = videnskabeligt_navn) |>
-  dplyr::mutate(habtype = as.numeric(habtype))
+  dplyr::rename(Taxa = videnskabeligt_navn) #|>
+#  dplyr::mutate(habtype = as.numeric(habtype))
 
 Cleaned_Taxons <- SDMWorkflows::Clean_Taxa(Taxons = Characteristic_Species$Taxa, Species_Only = F)
 
