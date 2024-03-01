@@ -53,10 +53,19 @@ app_server <- function(input, output, session) {
     })
 
   output$Artscore <- renderText({
-    Index <- Artscore::Artscore(ScientificName = my_habitatdata()$species, Habitat_code = unique(my_habitatdata()$habtype))$Artsindex
-    rvs$Artscore <- paste("The artscore for this site is", round(Index, 3), "and the number of species in this plot is", length(unique(my_habitatdata()$species)))
-    rvs$Artscore
+    req(nrow(my_habitatdata()) > 0)  # Check if my_habitatdata() has at least 1 row
+
+    tryCatch({
+      Index <- Artscore::Artscore(ScientificName = my_habitatdata()$species, Habitat_code = unique(my_habitatdata()$habtype))$Artsindex
+      rvs$Artscore <- paste("The artscore for this site is", round(Index, 3), "and the number of species in this plot is", length(unique(my_habitatdata()$species)))
+      rvs$Artscore
+    }, error = function(e) {
+      rvs$Artscore <- "Artscore cannot be calculated for this habitat."
+      rvs$Artscore
+    })
   })
+
+
 
   # output$Test <- shiny::renderText({
   #   my_habitatdata()$MajorHabName[1]

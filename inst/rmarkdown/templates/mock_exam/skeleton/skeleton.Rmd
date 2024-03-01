@@ -28,7 +28,9 @@ The species list and their parameters are shown in table 1
 Table <- params$SpeciesList
 
 kableExtra::kbl(Table, booktabs = T, caption = "Species list with their parameters, including ellenberg values and CSR values") |> 
-kableExtra::kable_styling(latex_options = c("scale_down", "hold_position"), position = "center")
+kableExtra::kable_styling(latex_options = c("scale_down", "hold_position"), position = "center") |> 
+  kableExtra::row_spec(row = which(Table$characteristic == "I"), background = '#a6d96a') |> 
+  kableExtra::row_spec(row = which(Table$characteristic == "C"), background =  '#fdae61')
 ```
 
 The histogram of the ecological indicator values can be seen in figure \@ref(fig:Ellenberg)
@@ -40,7 +42,7 @@ print(params$Histogram)
 Finally the ternary plot for the CSR values can be seen in figure \@ref(fig:CSR)
 
 ```{r CSR, fig.cap= "CSR values for the species in the plot"}
-#Dataset <- params$Dataset
-#G <- ggtern::ggtern(data = Dataset, ggtern::aes(C, R, S)) + ggplot2::geom_point() + ggtern::theme_arrowlength()
-#print(G)
+Dataset <- params$Dataset
+G <- ggtern::ggtern(data = Dataset, ggtern::aes(C, R, S)) + ggplot2::geom_point() + ggtern::theme_arrowlength()
+print(G)
 ```
