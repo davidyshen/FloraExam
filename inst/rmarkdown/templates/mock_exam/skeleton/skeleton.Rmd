@@ -16,7 +16,7 @@ params:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, error = FALSE)
 library(ggplot2)
-#library(ggtern)
+library(ggtern)
 library(kableExtra)
 ```
 
