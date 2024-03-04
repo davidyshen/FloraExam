@@ -8,7 +8,7 @@ RUN Rscript -e 'remotes::install_version("rlang",upgrade="never", version = "1.1
 RUN Rscript -e 'remotes::install_version("stringr",upgrade="never", version = "1.5.1")'
 RUN Rscript -e 'remotes::install_version("dplyr",upgrade="never", version = "1.1.4")'
 RUN Rscript -e 'remotes::install_version("rmarkdown",upgrade="never", version = "2.25")'
-RUN Rscript -e 'remotes::install_version("ggplot2",upgrade="never", version = "3.5.0")'
+RUN Rscript -e 'remotes::install_version("ggplot2",upgrade="never", version = "3.4.4")'
 RUN Rscript -e 'remotes::install_version("shiny",upgrade="never", version = "1.8.0")'
 RUN Rscript -e 'remotes::install_version("tidyr",upgrade="never", version = "1.3.1")'
 RUN Rscript -e 'remotes::install_version("config",upgrade="never", version = "0.3.2")'
