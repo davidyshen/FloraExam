@@ -5,6 +5,7 @@ RUN echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.m
 RUN R -e 'install.packages("remotes")'
 RUN Rscript -e 'remotes::install_version("magrittr",upgrade="never", version = "2.0.3")'
 RUN Rscript -e 'remotes::install_version("rlang",upgrade="never", version = "1.1.3")'
+RUN Rscript -e 'remotes::install_version("tinytex",upgrade="never", version = "0.49")'
 RUN Rscript -e 'remotes::install_version("stringr",upgrade="never", version = "1.5.1")'
 RUN Rscript -e 'remotes::install_version("dplyr",upgrade="never", version = "1.1.4")'
 RUN Rscript -e 'remotes::install_version("rmarkdown",upgrade="never", version = "2.25")'
