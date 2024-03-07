@@ -166,7 +166,7 @@ app_server <- function(input, output, session) {
     colnames(Table) <- stringr::str_replace_all(colnames(Table), "eiv_eres_", "Ellenberg_")
     rvs$SpeciesList <- Table
     Table  |>
-      DT::datatable() %>%
+      DT::datatable(options = list(lengthMenu = list(c(50, -1), c('50', 'All')))) %>%
       DT::formatStyle(
        'characteristic',
        target = 'row',
