@@ -5,6 +5,7 @@ RUN echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.m
 RUN R -e 'install.packages("remotes")'
 RUN Rscript -e 'remotes::install_version("magrittr",upgrade="never", version = "2.0.3")'
 RUN Rscript -e 'remotes::install_version("rlang",upgrade="never", version = "1.1.3")'
+RUN Rscript -e 'remotes::install_version("tinytex",upgrade="never", version = "0.49")'
 RUN Rscript -e 'remotes::install_version("stringr",upgrade="never", version = "1.5.1")'
 RUN Rscript -e 'remotes::install_version("dplyr",upgrade="never", version = "1.1.4")'
 RUN Rscript -e 'remotes::install_version("rmarkdown",upgrade="never", version = "2.25")'
@@ -25,6 +26,7 @@ RUN Rscript -e 'remotes::install_version("ggrepel",upgrade="never", version = "0
 RUN Rscript -e 'remotes::install_version("DT",upgrade="never", version = "0.29")'
 RUN Rscript -e 'remotes::install_github("rspatial/terra@1b7d4a0589d45234ef413ce06a01527aa9b0c2fd")'
 RUN Rscript -e 'remotes::install_github("Sustainscapes/Artscore@64eaf5a9d32ec62fff1cce1523ca0fa3e669416a")'
+RUN Rscript -e 'tinytex::tlmgr_update()'
 RUN mkdir /build_zone
 ADD . /build_zone
 WORKDIR /build_zone

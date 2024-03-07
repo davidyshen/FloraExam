@@ -85,6 +85,8 @@ app_server <- function(input, output, session) {
                           choices = c(sort((dplyr::filter(FloraExam::SpatialData, MajorHabName == my_habitatdata()$MajorHabName[1]))$habitat_name), ""),
                           multiple = TRUE,
                           options = list(maxItems = 1))
+    }else if (req(input$Answer) != my_habitatdata()$MajorHabName[1]) {
+      shiny::HTML("<h2>Try again!<h2>")
     }})
 
   output$Leaflet <- leaflet::renderLeaflet({
