@@ -2,6 +2,7 @@
 library(terra)
 library(tidyverse)
 library(readxl)
+library(Artscore)
 
 Coords <- terra::vect("data-raw/Spatial.shp") |>
   terra::geom() |>
@@ -36,9 +37,37 @@ Final_Frequency <- read_csv("data-raw/Final_Frequency.csv") |>
   dplyr::filter(!is.na(species)) |>
   dplyr::mutate(plot = as.character(plot))
 
-Plots <- SpatialData |>
-  dplyr::full_join(Final_Frequency, multiple = "all") |>
-  dplyr::full_join(Ellenberg_CSR, multiple = "all") |>
+SpatialData$Artsindeks <- as.numeric(rep(NA, nrow(SpatialData)))
+
+for(i in 1:nrow(SpatialData)){
+  Temp <- Final_Frequency |> dplyr::filter(plot == SpatialData$plot[i])
+  Temp <- suppressMessages(full_join(Temp, SpatialData[i,]))
+  try({suppressMessages(SpatialData$Artsindeks[i] <- Artscore::Artscore(ScientificName = Temp$species, Habitat_code = unique(Temp$habtype))$Artsindex)})
+  if((i %% 100) == 0){
+    message(paste(i, "of", nrow(SpatialData), "ready", Sys.time()))
+  }
+}
+
+SpatialData <-SpatialData |>
+  group_by(habitat_name) |>
+  dplyr::mutate(median_arts = median(Artsindeks, na.rm = T),
+                delta_arts = abs(Artsindeks - median_arts)) |>
+  ungroup()
+
+
+SpatialDataMedian <- SpatialData |>
+  group_by(habtype) |>
+  slice_min(order_by = delta_arts, n = 50) |>
+  ungroup()
+
+SpatialDataMax <- SpatialData |>
+  group_by(habtype) |>
+  slice_max(order_by = Artsindeks, n = 5, na_rm = T) |>
+  ungroup()
+
+Plots <- SpatialDataMedian |>
+  dplyr::left_join(Final_Frequency, multiple = "all") |>
+  dplyr::left_join(Ellenberg_CSR, multiple = "all") |>
   dplyr::filter(!is.na(habitat_name)) |>
   group_by(plot, habitat_name) |>
   dplyr::summarize(non_na_eiv = sum(!is.na(eiv_eres_n)),
@@ -52,10 +81,12 @@ Plots <- SpatialData |>
   dplyr::filter(non_na_csr > 2) |>
   ungroup() |>
   group_by(habitat_name) |>
-  dplyr::slice_max(order_by = prop_csr, n = 30) |>
+  dplyr::slice_max(order_by = total_csr, n = 30) |>
   dplyr::slice_max(order_by = non_na_csr, n = 20) |>
   pull(plot) |>
   unique()
+
+Plots <- unique(c(Plots, SpatialDataMax$plot))
 
 SpatialData <- SpatialData |>
   dplyr::filter(plot %in% Plots) |>
