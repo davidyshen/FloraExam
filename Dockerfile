@@ -26,7 +26,6 @@ RUN Rscript -e 'remotes::install_version("ggrepel",upgrade="never", version = "0
 RUN Rscript -e 'remotes::install_version("DT",upgrade="never", version = "0.29")'
 RUN Rscript -e 'remotes::install_github("rspatial/terra@1b7d4a0589d45234ef413ce06a01527aa9b0c2fd")'
 RUN Rscript -e 'remotes::install_github("Sustainscapes/Artscore@64eaf5a9d32ec62fff1cce1523ca0fa3e669416a")'
-RUN Rscript -e 'tinytex::tlmgr_update()'
 RUN mkdir /build_zone
 ADD . /build_zone
 WORKDIR /build_zone
