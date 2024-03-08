@@ -5,6 +5,10 @@ output:
   bookdown::pdf_document2:
     fig_caption: true
     toc: false
+header-includes:
+  \usepackage{float}
+  \usepackage{booktabs}
+  \usepackage{colortbl}
 params:
   Artscore: NA
   SpeciesList: NA
