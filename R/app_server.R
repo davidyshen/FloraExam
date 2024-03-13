@@ -57,7 +57,7 @@ app_server <- function(input, output, session) {
 
     tryCatch({
       Index <- Artscore::Artscore(ScientificName = my_habitatdata()$species, Habitat_code = unique(my_habitatdata()$habtype))$Artsindex
-      rvs$Artscore <- paste("The artscore for this site is", round(Index, 3), "and the number of species in this plot is", length(unique(my_habitatdata()$species)))
+      rvs$Artscore <- paste("The artsindex for this site is", round(Index, 3), "and the number of species in this plot is", length(unique(my_habitatdata()$species)))
       rvs$Artscore
     }, error = function(e) {
       rvs$Artscore <- "Artscore cannot be calculated for this habitat."
@@ -111,9 +111,17 @@ app_server <- function(input, output, session) {
   # })
 
   output$plot_ellenberg <- plotly::renderPlotly({
-    Medians <- my_habitatdata() |> dplyr::select(dplyr::starts_with("eiv_eres")) |> tidyr::pivot_longer(tidyr::everything(), names_to = "Ellenberg") |> dplyr::group_by(Ellenberg) |> dplyr::summarise(Median = median(value)) |> dplyr::mutate(Ellenberg = stringr::str_to_sentence(stringr::str_remove_all(Ellenberg, "eiv_eres_")))
+    Medians <- my_habitatdata() |>
+      dplyr::select(light, temperature, moisture, reaction, nutrients, salinity) |>
+      tidyr::pivot_longer(tidyr::everything(), names_to = "Ellenberg") |>
+      dplyr::group_by(Ellenberg) |>
+      dplyr::summarise(Median = median(value, na.rm = T))
 
-    G <- my_habitatdata() |> dplyr::select(dplyr::starts_with("eiv_eres")) |> tidyr::pivot_longer(tidyr::everything(), names_to = "Ellenberg") |> dplyr::mutate(Ellenberg = stringr::str_to_sentence(stringr::str_remove_all(Ellenberg, "eiv_eres_"))) |> ggplot2::ggplot(ggplot2::aes(x = Ellenberg, y = value)) + ggplot2::geom_boxplot() + ggplot2::coord_flip() + ggplot2::theme_bw() + ylim(c(0,10)) + ggplot2::xlab("Ecological indicator value") + ggplot2::xlab("Ecological indicator value") + ggrepel::geom_text_repel(data = Medians, aes(x = Ellenberg, y = Median, label = round(Median, 2)))
+    G <- my_habitatdata() |>
+      dplyr::select(light, temperature, moisture, reaction, nutrients, salinity) |>
+      tidyr::pivot_longer(tidyr::everything(), names_to = "Ellenberg") |>
+      ggplot2::ggplot(ggplot2::aes(x = Ellenberg, y = value)) + ggplot2::geom_boxplot() +
+      ggplot2::coord_flip() + ggplot2::theme_bw() + ylim(c(0,10)) + ggplot2::xlab("Ecological indicator value") + ggplot2::xlab("Ecological indicator value") + ggrepel::geom_text_repel(data = Medians, aes(x = Ellenberg, y = Median, label = round(Median, 2)))
     rvs$Histogram <- G
     plotly::ggplotly(G)
   })
@@ -161,11 +169,10 @@ app_server <- function(input, output, session) {
   output$tbl_myhab <- DT::renderDT({
     Table <- my_habitatdata() |>
       dplyr::select(NavnDansk,
-                    canonicalName,
-                    dplyr::starts_with("eiv"), C, S , R, characteristic) |>
+                    Taxa,
+                    light, temperature, moisture, reaction, nutrients, salinity, C, S , R, characteristic) |>
       dplyr::mutate_if(is.numeric, round)
 
-    colnames(Table) <- stringr::str_replace_all(colnames(Table), "eiv_eres_", "Ellenberg_")
     rvs$SpeciesList <- Table
     Table  |>
       DT::datatable(options = list(lengthMenu = list(c(50, -1), c('50', 'All')))) %>%
