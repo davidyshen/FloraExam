@@ -24,6 +24,12 @@ SpatialData <- terra::vect("data-raw/Spatial.shp") |>
                 Long = x) |>
   dplyr::select(-habitat_name, -MajorHabName) |>
   dplyr::mutate(plot = as.character(plot), habtype = as.character(habtype)) |>
+  dplyr::mutate(habtype = case_when(habtype == "9998" ~ "91D0",
+                                    habtype == "9999" ~ "91E0",
+                                    TRUE ~ habtype)) |>
+  dplyr::mutate(MajorHab = case_when(habtype == "91D0" ~ "91",
+                                    habtype == "91E0" ~ "91",
+                                    TRUE ~ MajorHab)) |>
   left_join(NewHabs) |>
   dplyr::filter_all(~!is.na(.x)) |>
   dplyr::select("plot", "habtype", "MajorHab", "habitat_name", "MajorHabName", "Long", "Lat")
@@ -67,16 +73,12 @@ SpatialDataMax <- SpatialData |>
 
 Plots <- SpatialDataMedian |>
   dplyr::left_join(Final_Frequency, multiple = "all") |>
-  dplyr::left_join(Ellenberg_CSR, multiple = "all") |>
+  dplyr::left_join(Ellenberg_CSR, multiple = "all", relationship = "many-to-many") |>
   dplyr::filter(!is.na(habitat_name)) |>
   group_by(plot, habitat_name) |>
-  dplyr::summarize(non_na_eiv = sum(!is.na(eiv_eres_n)),
-                   na_eiv = sum(is.na(eiv_eres_n)),
-                   non_na_csr = sum(!is.na(C)),
+  dplyr::summarize(non_na_csr = sum(!is.na(C)),
                    na_csr = sum(is.na(C))) |>
-  mutate(prop_eiv = non_na_eiv/(na_eiv + non_na_eiv),
-         total_eiv = na_eiv + non_na_eiv,
-         prop_csr = non_na_csr/(na_csr + non_na_csr),
+  mutate(prop_csr = non_na_csr/(na_csr + non_na_csr),
          total_csr = na_csr + non_na_csr) |>
   dplyr::filter(non_na_csr > 2) |>
   ungroup() |>
@@ -90,10 +92,12 @@ Plots <- unique(c(Plots, SpatialDataMax$plot))
 
 SpatialData <- SpatialData |>
   dplyr::filter(plot %in% Plots) |>
-  dplyr::mutate(habitat_name = paste0(habitat_name, " (", habtype, ")"))
+  dplyr::mutate(habitat_name = paste0(habitat_name, " (", habtype, ")")) |>
+  dplyr::distinct()
 
 Final_Frequency <- Final_Frequency |>
-  dplyr::filter(plot %in% Plots)
+  dplyr::filter(plot %in% Plots) |>
+  dplyr::distinct()
 
 usethis::use_data(SpatialData, overwrite = TRUE)
 
