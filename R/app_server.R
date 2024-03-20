@@ -4,7 +4,7 @@
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @importFrom Artscore Artscore
-#' @importFrom dplyr filter slice_sample left_join select mutate starts_with mutate_if group_by summarise
+#' @importFrom dplyr filter slice_sample left_join select mutate starts_with mutate_if group_by summarise distinct
 #' @importFrom stringr str_remove_all str_to_sentence str_replace_all
 #' @importFrom tidyr pivot_longer everything
 #' @importFrom rlang sym
@@ -42,13 +42,15 @@ app_server <- function(input, output, session) {
         dplyr::slice_sample(n = 1) |>
         dplyr::left_join(FloraExam::Final_Frequency) |>
         dplyr::left_join(FloraExam::Ellenberg_CSR) |>
-        dplyr::left_join(FloraExam::Characteristic_Species)
+        dplyr::left_join(FloraExam::Characteristic_Species) |>
+        dplyr::distinct()
     } else {
       FloraExam::SpatialData |>
         dplyr::slice_sample(n = 1) |>
         dplyr::left_join(FloraExam::Final_Frequency) |>
         dplyr::left_join(FloraExam::Ellenberg_CSR) |>
-        dplyr::left_join(FloraExam::Characteristic_Species)
+        dplyr::left_join(FloraExam::Characteristic_Species) |>
+        dplyr::distinct()
     }
     })
 
@@ -171,10 +173,12 @@ app_server <- function(input, output, session) {
       dplyr::select(NavnDansk,
                     Taxa,
                     light, temperature, moisture, reaction, nutrients, salinity, C, S , R, characteristic) |>
-      dplyr::mutate_if(is.numeric, round)
+      dplyr::mutate_if(is.numeric, round) |>
+      dplyr::distinct()
 
     rvs$SpeciesList <- Table
     Table  |>
+      dplyr::distinct() |>
       DT::datatable(options = list(lengthMenu = list(c(50, -1), c('50', 'All')))) %>%
       DT::formatStyle(
        'characteristic',
