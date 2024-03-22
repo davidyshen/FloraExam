@@ -12,7 +12,7 @@ Characteristic_Species <- readxl::read_xlsx("data-raw/habitat_characteristic_spe
 
 Cleaned_Taxons <- SDMWorkflows::Clean_Taxa(Taxons = Characteristic_Species$Taxa, Species_Only = F)
 
-Characteristic_Species <- Cleaned_Taxons |> dplyr::left_join(Characteristic_Species) |> dplyr::select(-Taxa)
+Characteristic_Species <- Cleaned_Taxons |> dplyr::left_join(Characteristic_Species)
 
 
 
