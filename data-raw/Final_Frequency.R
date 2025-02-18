@@ -61,6 +61,3 @@ usethis::use_data(Final_Frequency, overwrite = TRUE)
 
 # Cladonia and Sphagnum habitat codes are exported from the exceptions_and_rules.csv
 # file. These are the habitat types where we want to show these groups, else hide them.
-
-usethis::use_data(cladonia_codes, overwrite = TRUE)
-usethis::use_data(sphagnum_codes, overwrite = TRUE)
