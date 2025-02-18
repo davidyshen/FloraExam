@@ -58,6 +58,7 @@ Final_Frequency <- read_csv("data-raw/Final_Frequency.csv") |>
   dplyr::filter(!is.na(species)) |>
   dplyr::mutate(plot = as.character(plot))
 
+
 SpatialData$Artsindeks <- as.numeric(rep(NA, nrow(SpatialData)))
 
 for(i in 1:nrow(SpatialData)){
