@@ -1,7 +1,7 @@
 # This script contains the rules by which species in the Final Frequency dataset
 # are included or excluded.
 
-# The exceptions and rules csv has three columns, Art_Latin, Grouping and Haptype
+# The exceptions and rules csv has three columns, Art_Latin, Grouping and Habtype
 # The Art-Latin column contains the taxon of species to leave at whatever level
 # described in the exceptions, everything else is to be left at species level
 # Grouping column lists entries that should be grouped into a higher level
@@ -12,8 +12,18 @@ exceptions <- read.csv("data-raw/exceptions_and_rules.csv")
 
 # Get the rows where the Grouping is Cladonia and get the Art_Latin column
 cladonia <- exceptions[exceptions$Grouping == "Cladonia", "Art_Latin"]
+cladonia_codes <- exceptions[exceptions$Grouping == "Cladonia", "Habtype"] |>
+    unique() |>
+    as.character() |>
+    strsplit("\\|") |>
+    unlist()
 # Same for the Sphagnum group
 sphagnum <- exceptions[exceptions$Grouping == "Sphagnum", "Art_Latin"]
+sphagnum_codes <- exceptions[exceptions$Grouping == "Sphagnum", "Habtype"] |>
+    unique() |>
+    as.character() |>
+    strsplit("\\|") |>
+    unlist()
 
 apply_rules <- function(x) {
     split_name <- strsplit(x, " ")[[1]]
@@ -34,3 +44,4 @@ apply_rules <- function(x) {
         return(x)
     }
 }
+
