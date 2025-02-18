@@ -61,9 +61,17 @@ Final_Frequency <- read_csv("data-raw/Final_Frequency.csv") |>
 SpatialData$Artsindeks <- as.numeric(rep(NA, nrow(SpatialData)))
 
 for(i in 1:nrow(SpatialData)){
-  Temp <- Final_Frequency |> dplyr::filter(plot == SpatialData$plot[i])
+  Temp <- Final_Frequency |>
+    dplyr::filter(plot == SpatialData$plot[i])
   Temp <- suppressMessages(full_join(Temp, SpatialData[i,]))
-  try({suppressMessages(SpatialData$Artsindeks[i] <- Artscore::Artscore(ScientificName = Temp$species, Habitat_code = unique(Temp$habtype))$Artsindex)})
+  try({
+    suppressMessages(
+      SpatialData$Artsindeks[i] <- Artscore::Artscore(
+        ScientificName = Temp$species, 
+        Habitat_code = unique(Temp$habtype)
+      )$Artsindex
+    )
+  })
   if((i %% 100) == 0){
     message(paste(i, "of", nrow(SpatialData), "ready", Sys.time()))
   }
